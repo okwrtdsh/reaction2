@@ -1,0 +1,12 @@
+{
+  "name": "reaction",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./src/server.js"
+  },
+  "dependencies": {
+    "socket.io": "*",
+    "sleep-async": "*"
+  }
+}

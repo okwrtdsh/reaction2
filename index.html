@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>REACTION TIME</title>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+<script>
+$(function() {
+  var socket = io.connect();
+  socket.on('msg', function(data){
+    $('.output').text(data);
+  });
+  socket.on('question', function(data){
+    $('.output').text(data);
+  });
+  $("body").keyup(function(e){
+    //console.log(e.keyCode);
+    if(e.keyCode==74){
+      socket.emit('answer', true);
+    }
+    else if(e.keyCode==75){
+      socket.emit('answer', false);
+    }
+    else if(e.keyCode==70){
+      socket.emit('finish');
+    }
+    else if(e.keyCode==83){
+      socket.emit('start');
+    }
+    else if(e.keyCode==67){
+      socket.emit('change');
+    }
+  });
+  $(".output").css("padding-top", $(window).height()/2-64);
+});
+</script>
+</head>
+<body>
+  <div class="output" style="text-align: center;font-size: 128px;">
+    <ul style="font-size: 64px;list-style-type: none;">
+      <li>S: start F: finish</li>
+      <li>J: true K: false</li>
+      <li>C: change</li>
+    </ul>
+  </div>
+</body>
+</html>
