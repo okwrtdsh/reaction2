@@ -89,14 +89,13 @@ function getQuestion(){
     if(Math.floor(Math.random()+0.5)){
       questionAnswer = true;
       var rnd = Math.floor(Math.random() * s.length);
-      var rnd2 = Math.floor(Math.random() + 0.5);
-      question = s[rnd] + " " + s[(rnd + (s.length / 2) * rnd2) % (s.length)];
+      question = s[rnd] + " " + s[(rnd + s.length / 2) % (s.length)];
       return question;
     }
     else{
       questionAnswer = false;
       var rnd = Math.floor(Math.random() * s.length);
-      var rnd2 = Math.floor(Math.random() * s.length);
+      var rnd2 = (rnd + Math.floor(Math.random() * s.length / 2)) % s.length;
       while(s[rnd].toLowerCase() == s[rnd2].toLowerCase()){
         rnd2 = Math.floor(Math.random() * s.length);
       }
