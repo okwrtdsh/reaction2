@@ -136,7 +136,7 @@ function getQuestion(){
       else{
         var rnd2 = Math.floor(Math.random() * 20);
       }
-      question = s[rnd] + " " + s[rnd];
+      question = s[rnd] + " " + s[rnd2];
       return question;
     }
   }

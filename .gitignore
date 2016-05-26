@@ -50,3 +50,5 @@ tags
 .DS_Store
 .python-version
 log/
+python/
+tex/
