@@ -3,46 +3,97 @@
 <head>
 <meta charset="UTF-8">
 <title>REACTION TIME</title>
+<link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<style>
+.red {
+  background-color: red;
+}
+pre {
+  padding:0px;
+}
+</style>
 <script>
 $(function() {
   var socket = io.connect();
   socket.on('msg', function(data){
     $('.output').text(data);
   });
+  socket.on('finish', function(data){
+    $('.output').text(data);
+    $("#start").val("終了");
+    $("#start").attr("disabled", true);
+  });
   socket.on('question', function(data){
     $('.output').text(data);
-  });
-  $("body").keyup(function(e){
-    //console.log(e.keyCode);
-    if(e.keyCode==74){
-      socket.emit('answer', true);
+    if(data=="L"){
+      $(".preleft").addClass("red");
     }
-    else if(e.keyCode==75){
-      socket.emit('answer', false);
-    }
-    else if(e.keyCode==70){
-      socket.emit('finish');
-    }
-    else if(e.keyCode==83){
-      socket.emit('start');
-    }
-    else if(e.keyCode==67){
-      socket.emit('change');
+    else{
+      $(".preright").addClass("red");
     }
   });
-  $(".output").css("padding-top", $(window).height()/2-64);
+  socket.on('reset', function(data){
+    $('.output').text("");
+    $(".preleft").removeClass("red");
+    $(".preright").removeClass("red");
+    $("#start").val("開始");
+  });
+  $("#start").mouseup(function(){
+    socket.emit('start', "");
+    $(this).val("出題中");
+  });
+  $(".preleft").click(function(){
+      socket.emit('stop', "L");
+  });
+  $(".preright").click(function(){
+      socket.emit('stop', "R");
+  });
+  $("#width").change(function(){
+    $(".preleft").css("width", $(this).val()+"px");
+    $(".preright").css("width", $(this).val()+"px");
+  }).change();
+  $("#margin").change(function(){
+    $(".preleft").css("margin-right", $(this).val()+"px");
+    $(".preright").css("margin-left", $(this).val()+"px");
+  }).change();
 });
 </script>
 </head>
 <body>
-  <div class="output" style="text-align: center;font-size: 128px;">
-    <ul style="font-size: 64px;list-style-type: none;">
-      <li>S: start F: finish</li>
-      <li>J: true K: false</li>
-      <li>C: change</li>
-    </ul>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-6 col-md-offset-3">
+        <table class="table">
+          <tr>
+            <th>width(px)</th>
+            <td><input id="width" class="form-contrl" value="100"/></td>
+          </tr>
+          <tr>
+            <th>margin(px)</th>
+            <td><input id="margin" class="form-contrl" value="100"/></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="output" style="height:50px; font-size:40px;"></div>
+    </div>
+    <div class="row text-center" style="padding-top: 20px;">
+      <input id="start" type="button" class="btn btn-primary" value="開始"/>
+    </div>
+    <div class="row">
+      <div class="col-md-6" style="padding-left: 0px; padding-right: 0px;">
+        <pre class="preleft" style="float:right; height:400px;">
+        </pre>
+      </div>
+      <div class="col-md-6" style="padding-left: 0px; padding-right: 0px;">
+        <pre class="preright" style="float:left; height:400px;">
+        </pre>
+      </div>
+    </div>
   </div>
 </body>
 </html>
